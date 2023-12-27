@@ -1,0 +1,60 @@
+label, input, button {
+    margin: 10px;
+    padding: 5px;
+}
+
+footer {
+    bottom: 0;
+    position: absolute;
+    width: 90%;
+    height: 40px;
+}
+
+.NewsContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 90%;
+    max-width: 960px;
+    margin: 0 auto;
+    justify-content: center;
+  }
+  
+.NewsColumn {
+    flex-basis: percentage(1/3);
+    width: percentage(1/3);
+    padding: 10px 10px;
+    box-sizing: border-box;
+}
+
+.Pagination {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    column-gap: 20px;
+}
+
+.Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .7);
+    z-index: 1000;
+}
+
+.Modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #FFF;
+    padding: 50px;
+    z-index: 1000
+}
+
+.ModalClose {
+    display: flex;
+    justify-content: right;
+}
