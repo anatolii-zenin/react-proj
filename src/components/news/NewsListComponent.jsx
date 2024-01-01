@@ -1,92 +1,53 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { deleteNewsById, retrieveAllNews, retrieveAuthorByNewsId } from "./api/NewsApi"
-import PaginationComponent from "./PaginationComponent"
+import { useQuery, useQueries, useMutation, useQueryClient } from "@tanstack/react-query"
 import NewsCardComponent from "./NewsCardComponent"
+import PaginationComponent from "./PaginationComponent"
 
-function NewsListComponent() {
+function mapAuthorsToNews(news, authors) {
+    return news.map((item, index) => {
+        item.author = authors[index]?.name
+        return item
+    })
+}
 
-    const [news, setNews] = useState([])
-    const [fetchError, setFetchError] = useState("")
-    const [isLoading, setIsLoading] = useState(true)
-    const [pageInfo, setPageInfo] = useState("")
+function News() {
     const [currPage, setCurrPage] = useState(1)
     const [newsPerPage, setNewsPerPage] = useState(3)
-    const [trigger, setTrigger] = useState(0)
+    const queryClient = useQueryClient()
 
-    const fetchAuthor = async(newsId) => {
-        var name = await retrieveAuthorByNewsId(newsId)
-            .then(
-                (response) => {
-                    return response.data.name
-                }
-            )
-            .catch((error) => console.log(error))
-            .finally(console.log("fetchAuthor done"))
-        return name
-    }
+    const { isLoading, data } = useQuery({
+        queryKey: ['news', {page: currPage, size: newsPerPage}],
+        queryFn: () => retrieveAllNews(currPage, newsPerPage)
+    })
 
-    const refreshNews = async() => {
-        var localNews = await retrieveAllNews(currPage, newsPerPage)
-            .then(
-                (response) => {
-                    setPageInfo(response.data)
-                    var promises = response.data.content.map(async (item) => {
-                        item.author = await fetchAuthor(item.id)
-                        return item
-                    })
-                    return Promise.all(promises).then((results) => {
-                            return results
-                        }
-                    )
-                }
-            )
-            .catch((error) => console.log(error))
-        setNews(localNews)
-    }
-
-    const deleteNews = async(id) => {
-        await deleteNewsById(id)
-            .then()
-            .catch((error) => console.log(error))
-        setTrigger(trigger + 1)
-    }
-
-    useEffect(
-        () =>  {
-            const fetchEntries = async() => {
-                try{
-                    await refreshNews()
-                } catch (err) {
-                    setFetchError(err.message)
-                } finally {
-                    setIsLoading(false)
-                }
+    const authorQueries = useQueries({
+        queries: (data?.data?.content ?? []).map(item => {
+            return {
+                queryKey: ["authorByNewsId", item.id],
+                queryFn: () => retrieveAuthorByNewsId(item.id)
             }
-            (async () => await fetchEntries())()
-            
-            
-        }, [trigger]
-    )
+        })
+    })
 
-    async function selectPage(pageNum) {
-        setCurrPage(pageNum)
-        console.log("should set: " + pageNum)
-        setTrigger(trigger + 1)
+    const deleteMutation = useMutation({
+        mutationFn: deleteNewsById,
+        onSuccess: () => {
+            queryClient.invalidateQueries(["news"], { exact: true})
+        }
+    })
+
+    if(isLoading) {
+        return <h2>Loading items...</h2>
     }
 
-    async function updateSize(size) {
-        setNewsPerPage(size)
-        setTrigger(trigger + 1)
-    }
-
-    if (fetchError)
-        console.log(fetchError)
-
-    console.log(pageInfo)
+    const authors = authorQueries.map(q => q?.data?.data)
+    const pageInfo = data.data
+    const news = mapAuthorsToNews(pageInfo.content, authors)
+    // console.log(mapAuthorsToNews(data.data.content, authors))
 
     return (
         <div>
-        {isLoading && <p>Loading items...</p>}
         <h1>News</h1>
             {!isLoading &&
                 <div>
@@ -105,7 +66,7 @@ function NewsListComponent() {
                                                 title={newsEntry.title}
                                                 content={newsEntry.content}
                                                 tags={newsEntry.tags}
-                                                deleteMethod = {deleteNews}
+                                                deleteMethod = {deleteMutation.mutate}
                                             />
                                         </div>
                                     )
@@ -115,10 +76,10 @@ function NewsListComponent() {
                     <PaginationComponent 
                         currPage={pageInfo.number+1} 
                         totalPages={pageInfo.totalPages}
-                        selectPageMethod={selectPage}
+                        selectPageMethod={setCurrPage}
                         currSize={pageInfo.size}
                         totalElements={pageInfo.totalElements}
-                        updateSizeMethod={updateSize}
+                        updateSizeMethod={setNewsPerPage}
                     />
                 </div>
             }
@@ -126,5 +87,4 @@ function NewsListComponent() {
     )
 }
 
-
-export default NewsListComponent
+export default News

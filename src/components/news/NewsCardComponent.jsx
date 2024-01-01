@@ -30,7 +30,8 @@ function NewsCardComponent({title, date, author, content, newsId, deleteMethod})
   }
 
   function deleteNews() {
-    (async (id) => await deleteMethod(id))(newsId)
+    setModal(false)
+    deleteMethod(newsId)
   }
 
   return (
