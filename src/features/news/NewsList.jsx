@@ -1,8 +1,8 @@
 import { useState } from "react"
-import { deleteNewsById, retrieveAllNews, retrieveAuthorByNewsId } from "./api/NewsApi"
+import { deleteNewsById, retrieveAllNews, retrieveAuthorByNewsId } from "../api/NewsApi"
 import { useQuery, useQueries, useMutation, useQueryClient } from "@tanstack/react-query"
-import NewsCardComponent from "./NewsCardComponent"
-import PaginationComponent from "./PaginationComponent"
+import PaginationComponent from "../pagination/Pagination"
+import NewsCardComponent from "./NewsCard"
 
 function mapAuthorsToNews(news, authors) {
     return news.map((item, index) => {

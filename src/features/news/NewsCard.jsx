@@ -1,11 +1,11 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import { useAuth } from "./security/AuthContext"
+import { useAuth } from "../authentication/AuthContext"
 import { useState } from 'react';
-import Modal from "./ModalComponent"
-import EditNews from './EditNewsComponent';
+import Modal from "../components/Modal"
+import EditNews from '../../forms/EditNewsForm';
 
-function NewsCardComponent({title, date, author, content, newsId, deleteMethod}) {
+function NewsCardComponent({title, date, author, content, newsId, deleteMethod, editMethod}) {
 
   const [modal, setModal] = useState(false)
   const [modalTitle, setModalTitle] = useState("")
