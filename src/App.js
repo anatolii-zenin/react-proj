@@ -1,4 +1,3 @@
-import './App.css';
 import NewsApp from './features/news/NewsApp';
 
 function App() {
