@@ -7,7 +7,7 @@ import LoginComponent from "../authentication/Login"
 import LogoutComponent from "../authentication/Logout"
 import ErrorComponent from "../components/Error"
 import News from "./NewsList"
-import ManageNewsComponent from "../components/ManageNews"
+import ManageUsersComponent from "../components/ManageUsers"
 import WelcomeComponent from "../../pages/Welcome"
 import SignupComponent from "../authentication/Signup"
 import AboutComponent from "../../pages/About"
@@ -60,7 +60,7 @@ export default function NewsApp() {
                             <Route path="/about" element={ <AboutComponent /> } />
                             <Route path="/manage" element={ 
                                 <AuthenticatedRoute> 
-                                    <ManageNewsComponent /> 
+                                    <ManageUsersComponent /> 
                                 </AuthenticatedRoute>} />
                         </Routes>
                         <FooterComponent />

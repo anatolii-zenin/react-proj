@@ -5,7 +5,7 @@ function WelcomeComponent() {
     const {username} = useParams()
 
     return (
-        <div className="WelcomeComponent">
+        <div className="Welcome">
             <h1>Welcome {username}</h1>
             <div>
                 <Link to="/">See news</Link>

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "./AuthContext"
+import { Button } from "react-bootstrap"
 
 function LoginComponent() {
 
@@ -40,12 +41,10 @@ function LoginComponent() {
                     <label>Password:</label>
                     <input type="password" name="password" value={password} onChange={onPasswordChange} />
                 </div>
-                <div>
-                    <button type="button" name = "login" 
-                        onClick={handleSubmit}
-                    >Log in</button>
+                <div className="Login-button">
+                    <Button variant="primary" onClick={handleSubmit}>Log in</Button>
                 </div>
-            </div>
+            </div>    
         </div>
     )
 }

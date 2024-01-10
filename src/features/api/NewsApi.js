@@ -6,8 +6,8 @@ const apiClient = axios.create(
     }
 )
 
-export async function retrieveAllNews(page, size) {
-    return apiClient.get(`/news?page=${page}&size=${size}`)
+export async function retrieveAllNews(page, size, filters) {
+    return apiClient.post(`/news?page=${page}&size=${size}`, filters)
 }
 
 export async function retrieveAuthor(id) {
@@ -22,10 +22,22 @@ export function retrieveTagsByNewsId(id) {
     return apiClient.get(`/news/${id}/tags`)
 }
 
-export function retrieveCommentsByNewsId(id) {
-    return apiClient.get(`/news/${id}/comments`)
-}
-
 export function deleteNewsById(id) {
     return apiClient.delete(`/news/${id}`)
+}
+
+export function editNewsEntry(news) {
+    return apiClient.patch(`/news/${news.id}`, news)
+}
+
+export function getTagIdByName(name) {
+    return apiClient.get(`tags/by-name?name=${name}`)
+}
+
+export function createTag(name) {
+    return apiClient.post(`tags/create`, {name: name})
+}
+
+export function createNews(news) {
+    return apiClient.post(`news/create`, news)
 }

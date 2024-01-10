@@ -3,7 +3,7 @@ import CloseButton from 'react-bootstrap/CloseButton'
  
   export default function Modal({ isOpen, children, onClose }) {
     function handleClose() {
-        onClose(false)
+        onClose()
     }
 
     if(!isOpen)

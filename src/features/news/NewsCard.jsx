@@ -3,30 +3,56 @@ import Card from 'react-bootstrap/Card';
 import { useAuth } from "../authentication/AuthContext"
 import { useState } from 'react';
 import Modal from "../components/Modal"
-import EditNews from '../../forms/EditNewsForm';
+import NewsForm from '../../forms/NewsForm'
+import { WithContext as ReactTags } from 'react-tag-input'
 
-function NewsCardComponent({title, date, author, content, newsId, deleteMethod, editMethod}) {
+function NewsCardComponent({title, date, author, content, newsId, tags, deleteMethod, editMethod}) {
 
   const [modal, setModal] = useState(false)
-  const [modalTitle, setModalTitle] = useState("")
   const [modalContent, setModalContent] = useState("")
-  const [modalConfirmAction, setModalConfirmAction] = useState(null)
 
   const authContext = useAuth()
   const isAuthenticated = authContext.isAuthenticated
 
+  function editNews(news) {
+    editMethod(news)
+    setModal(false)
+  }
+
   function toggleDeleteModal() {
-    setModalTitle("Do you want to delete this news?")
-    setModalContent("The action can not be undone")
+    setModalContent(
+      <div>
+        <div>
+          <h2>
+            Do you want to delete this news?
+          </h2>
+        </div>
+        <div>
+          The action can not be undone
+        </div>
+        <div>
+          <Button variant="primary" onClick={() => deleteNews(newsId)}>Confirm</Button>
+          <Button variant="primary" onClick={() => setModal(false)}>Cancel</Button>
+        </div>
+      </div>
+      )
     setModal(true)
-    setModalConfirmAction(() => deleteNews)
   }
 
   function toggleEditModal() {
-    setModalTitle("Edit news")
-    setModalContent(<EditNews currentTitle={title} currentContent={content} />)
+    setModalContent(
+      <div>
+        <NewsForm id={newsId} 
+          message={"Edit News"}
+          currentTitle={title} 
+          currentContent={content}
+          currentTags={tags} 
+          setModal={setModal} 
+          mainMethod={editNews} 
+        />
+      </div>
+      )
     setModal(true)
-    console.log("modal trig")
   }
 
   function deleteNews() {
@@ -40,17 +66,20 @@ function NewsCardComponent({title, date, author, content, newsId, deleteMethod, 
         <Card style={{ width: '18rem' }}>
           <Card.Body>
             <Card.Title>{title}</Card.Title>
+            <Card.Subtitle>{author}</Card.Subtitle>
             <div className="NewsDate">
-              Published: {date}
+              {date}
             </div>
             <Card.Text>
               {content}
             </Card.Text>
-            <div className="NewsAuthor">
-              Author: {author}
-            </div>
             <div className="NewsTags">
-              tags:
+            <ReactTags
+              tags={tags?.map((item) => {return {id: '' + item.id, name: item.name}})}
+              autocomplete={false}
+              labelField="name"
+              readOnly={true}
+            />
             </div>
             {
               isAuthenticated && 
@@ -63,14 +92,9 @@ function NewsCardComponent({title, date, author, content, newsId, deleteMethod, 
         </Card>
       </div>
       <div>
-        <Modal isOpen={modal} onClose={setModal}>
+        <Modal isOpen={modal} onClose={() => setModal(false)}>
             <div>
-              <h3>{modalTitle}</h3>
               {modalContent}
-            </div>
-            <div>
-              <Button variant="primary" onClick={() => modalConfirmAction(newsId)}>Confirm</Button>
-              <Button variant="primary" onClick={() => setModal(false)}>Cancel</Button>
             </div>
         </Modal>
       </div>

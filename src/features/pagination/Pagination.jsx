@@ -55,7 +55,7 @@ function PaginationComponent({
                 containerClassName="pagination"
                 activeClassName="active"
                 renderOnZeroPageCount={null}
-                forcePage={currPage-1}
+                forcePage={totalPages > 0? currPage-1 : -1}
             />
             <Dropdown options={options} onChange={handleeSizeChange} placeholder={currSize}/>            
         </div>
