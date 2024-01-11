@@ -15,20 +15,33 @@ function SearchComponent({searchString, setSearchString, setFilters}) {
         let filters = []
         
         if (content.length > 0) {
-            let contentFilter = {
-                column: "content",
-                value: "%" + content + "%",
-                operation: "LIKE"
+            let contentTitleFilter = {
+                operation: "COMBINE",
+                logicalOperation: "AND",
+                subFilters: [{
+                    column: "content",
+                    value: "%" + content + "%",
+                    operation: "LIKE",
+                    logicalOperation: "OR"
+                },
+                {
+                    column: "title",
+                    value: "%" + content + "%",
+                    operation: "LIKE",
+                    logicalOperation: "OR"
+                }]
             }
-            filters.push(contentFilter)
-        }        
+            filters.push(contentTitleFilter)
+        }     
+        
 
         for (const tag of tags) {
             let filter = {
                 column: "name",
-                value: tag,
+                value: "%" + tag + "%",
                 joinTableName: "tags",
-                operation: "JOIN"
+                operation: "JOIN",
+                logicalOperation: "AND",
             }
             filters.push(filter)
         }

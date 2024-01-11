@@ -14,7 +14,7 @@ import CloseButton from 'react-bootstrap/CloseButton'
         <div className='Overlay' />
         <div className='Modal'>
             <div className="ModalClose">
-                <CloseButton onClick={handleClose}/>
+                <CloseButton onClick={handleClose} className="btn-close btn-close-white"/>
             </div>
             {children}
         </div>

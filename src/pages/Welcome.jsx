@@ -1,12 +1,15 @@
 import { Link, useParams } from "react-router-dom"
+import { useAuth } from "../features/authentication/AuthContext"
 
 function WelcomeComponent() {
 
-    const {username} = useParams()
+    const authContext = useAuth()
 
+    console.log(authContext)
     return (
         <div className="Welcome">
-            <h1>Welcome {username}</h1>
+            <h1>Welcome {authContext.currentUser}</h1>
+            {authContext.isAdmin && "You are logged in as an administrator."}
             <div>
                 <Link to="/">See news</Link>
             </div>

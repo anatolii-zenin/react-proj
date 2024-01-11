@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import { useAuth } from "../authentication/AuthContext"
+import AuthProvider, { useAuth } from "../authentication/AuthContext"
 import { useState } from 'react';
 import Modal from "../components/Modal"
 import NewsForm from '../../forms/NewsForm'
@@ -13,6 +13,7 @@ function NewsCardComponent({title, date, author, content, newsId, tags, deleteMe
 
   const authContext = useAuth()
   const isAuthenticated = authContext.isAuthenticated
+  const isAdmin = authContext.isAdmin
 
   function editNews(news) {
     editMethod(news)
@@ -47,8 +48,10 @@ function NewsCardComponent({title, date, author, content, newsId, tags, deleteMe
           currentTitle={title} 
           currentContent={content}
           currentTags={tags} 
-          setModal={setModal} 
-          mainMethod={editNews} 
+          setModal={setModal}
+          mainMethod={editNews}
+          jwt={authContext.jwt}
+          authorId={authContext.authorId}
         />
       </div>
       )
@@ -82,7 +85,7 @@ function NewsCardComponent({title, date, author, content, newsId, tags, deleteMe
             />
             </div>
             {
-              isAuthenticated && 
+              isAuthenticated && isAdmin && 
               <div>
                 <Button variant="primary" onClick={() => toggleDeleteModal()}>Delete</Button> 
                 <Button variant="primary" onClick={() => toggleEditModal()}>Edit</Button>

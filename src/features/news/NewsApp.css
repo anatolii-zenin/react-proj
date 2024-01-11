@@ -71,14 +71,15 @@ footer {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #FFF;
-    padding: 50px;
+    background-color: transparent;
+    padding: 10px;
     z-index: 1000
 }
 
 .ModalClose {
     display: flex;
     justify-content: right;
+    color: whitesmoke;
 }
 
   

@@ -1,11 +1,11 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "./AuthContext"
-import { Button } from "react-bootstrap"
+import { Button, Card, Container, Form } from "react-bootstrap"
 
 function LoginComponent() {
 
-    const [username, setUsername] = useState("admin")
+    const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [authFailure, setAuthFailure] = useState(false)
     const navigate = useNavigate()
@@ -20,8 +20,13 @@ function LoginComponent() {
         setPassword(event.target.value)
     }
 
-    function handleSubmit() {
-        if(authContext.logIn(username, password)) {
+    async function handleSubmit(e) {
+        e.preventDefault()
+
+        let authSuccessful = await authContext.logIn(username, password)
+
+        console.log(authSuccessful)
+        if(authSuccessful) {
             navigate(`/welcome/${username}`)
         }
         else {
@@ -30,22 +35,30 @@ function LoginComponent() {
     }
 
     return (
-        <div className="Login">
-            <div className="LoginForm">
-                {authFailure && <div className="AuthFailedMessage">Authorisation failed</div>}
-                <div>
-                    <label>Username:</label>
-                    <input type="text" name="username" value={username} onChange={onUserNameChange}/>
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input type="password" name="password" value={password} onChange={onPasswordChange} />
-                </div>
-                <div className="Login-button">
-                    <Button variant="primary" onClick={handleSubmit}>Log in</Button>
-                </div>
-            </div>    
-        </div>
+        <Container
+            className="d-flex align-items-center justify-content-center"
+            style={{ maxHeight: "50vh" }}
+        >
+            <div className="w-100" style={{ maxWidth: "40%" }}>
+            <Card>
+                <Card.Body>
+                    <h2 className="text-center mb-4">Log in</h2>
+                    {authFailure && <div className="AuthFailedMessage">Authorisation failed</div>}
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group id="username">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control type="username" value={username} onChange={onUserNameChange} required />
+                        </Form.Group>
+                        <Form.Group id="password">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control type="password" value={password} onChange={onPasswordChange} required />
+                        </Form.Group>
+                        <Button className="w-100 mt-4" type="submit">Log in</Button>
+                    </Form>
+                </Card.Body>
+            </Card>
+            </div>
+        </Container>
     )
 }
 

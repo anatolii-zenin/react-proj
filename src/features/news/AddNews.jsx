@@ -4,11 +4,14 @@ import { Button } from "react-bootstrap"
 import NewsForm from "../../forms/NewsForm"
 import { createNews } from "../api/NewsApi"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useAuth } from "../authentication/AuthContext"
 
 function AddNews({disabled}) {
 
     const [modal, setModal] = useState(false)
     const queryClient = useQueryClient()
+
+    const authContext = useAuth()
 
     const addMutation = useMutation({
         mutationFn: createNews,
@@ -26,7 +29,8 @@ function AddNews({disabled}) {
                     message={"Add news"}
                     setModal={() => setModal(false)} 
                     mainMethod={addMutation.mutate}
-                    authorId={1}
+                    authorId={authContext.authorId}
+                    jwt = {authContext.jwt}
                 />
                 </Modal>
             </div>
