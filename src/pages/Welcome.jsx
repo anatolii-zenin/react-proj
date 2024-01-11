@@ -11,7 +11,7 @@ function WelcomeComponent() {
             <h1>Welcome {authContext.currentUser}</h1>
             {authContext.isAdmin && "You are logged in as an administrator."}
             <div>
-                <Link to="/">See news</Link>
+                <Link to="/news">See news</Link>
             </div>
         </div>
     )

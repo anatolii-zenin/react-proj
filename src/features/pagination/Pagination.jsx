@@ -5,21 +5,31 @@ import { useEffect } from "react";
 
 function PaginationComponent({
         currPage, totalPages, totalElements, 
-        currSize, selectPageMethod, updateSizeMethod
+        currSize, setSearchParams
     }) {
 
     const handlePageClick = (event) => {
-        selectPageMethod(event.selected+1)
+        setSearchParams(prev => {
+            prev.set("page", event.selected+1)
+            return prev
+        }, {replace: true})
+        
     };
 
     const handleeSizeChange = (event) => {
         let size = event.value
-        updateSizeMethod(size)
+        setSearchParams(prev => {
+            prev.set("pageSize", size)
+            return prev
+        }, {replace: true})
 
         let lastPage = Math.ceil(totalElements/size)
         console.log("last page: " + lastPage)
         if (currPage > lastPage)
-            selectPageMethod(lastPage)
+        setSearchParams(prev => {
+            prev.set("page", lastPage)
+            return prev
+        }, {replace: true})
     }
 
     console.log(currSize)

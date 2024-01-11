@@ -6,6 +6,7 @@ import NewsCardComponent from "./NewsCard"
 import AddNews from "./AddNews"
 import SearchComponent from "../search/Search"
 import { useAuth } from "../authentication/AuthContext"
+import { useSearchParams } from "react-router-dom"
 
 function mapAuthorsTagsToNews(news, authors, tags) {
     return news.map((item, index) => {
@@ -16,10 +17,17 @@ function mapAuthorsTagsToNews(news, authors, tags) {
 }
 
 function News() {
-    const [currPage, setCurrPage] = useState(1)
-    const [newsPerPage, setNewsPerPage] = useState(3)
-    const [searchString, setSearchString] = useState("")
     const [filters, setFilters] = useState([])
+    const [searchParams, setSearchParams] = useSearchParams(
+        {
+            page: "1",
+            pageSize: "3"
+        }
+    )
+    console.log(searchParams.get("page"))
+    const currPage = searchParams.get("page")
+    const newsPerPage = searchParams.get("pageSize")
+    const searchString = searchParams.get("searchString")
 
     const authContext = useAuth()
     const isAuthenticated = authContext.isAuthenticated
@@ -28,7 +36,7 @@ function News() {
 
     const { isLoading, data } = useQuery({
         queryKey: ['news', {page: currPage, size: newsPerPage, filters: filters}],
-        queryFn: () => retrieveAllNews(currPage, newsPerPage, filters)
+        queryFn: () => retrieveAllNews(currPage ?? 1, newsPerPage ?? 3, filters)
     })
 
     const authorQueries = useQueries({
@@ -79,7 +87,7 @@ function News() {
                 <div className="Search-bar-container">
                     <SearchComponent 
                         searchString={searchString}
-                        setSearchString={setSearchString}
+                        setSearchParams={setSearchParams}
                         setFilters={setFilters}
                     />
                 </div>
@@ -114,13 +122,12 @@ function News() {
                 <PaginationComponent 
                     currPage={pageInfo.number+1} 
                     totalPages={pageInfo.totalPages}
-                    selectPageMethod={setCurrPage}
+                    searchString={searchParams.get("searchString")}
+                    setSearchParams={setSearchParams}
                     currSize={pageInfo.size}
                     totalElements={pageInfo.totalElements}
-                    updateSizeMethod={setNewsPerPage}
                 />
             </div>
-            
         </div>
     )
 }

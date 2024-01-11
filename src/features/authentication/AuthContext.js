@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react"
-import { getJWT, signUp } from "../api/AuthApi"
+import { getJWT } from "../api/AuthApi"
 import { jwtDecode } from "jwt-decode"
 import { filterAuthors } from "../api/NewsApi"
 
@@ -14,10 +14,6 @@ function AuthProvider({children}) {
     const [userRoles, setUserRoles] = useState()
     const [authorId, setAuthorId] = useState()
     const [jwt, setJwt] = useState()
-
-    function signup(username, password) {
-        signUp(username, password)
-    }
 
     async function logIn(username, password) {
         let jwt_local
@@ -45,6 +41,7 @@ function AuthProvider({children}) {
         setCurrentUser(null)
         setUserRoles(null)
         setAuthorId(null)
+        setAdmin(false)
     }
 
     useEffect(() => {

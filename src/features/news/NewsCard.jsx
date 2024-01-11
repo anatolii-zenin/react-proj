@@ -22,20 +22,20 @@ function NewsCardComponent({title, date, author, content, newsId, tags, deleteMe
 
   function toggleDeleteModal() {
     setModalContent(
-      <div>
-        <div>
+      <Card>
+        <Card.Body>
           <h2>
             Do you want to delete this news?
           </h2>
-        </div>
-        <div>
-          The action can not be undone
-        </div>
-        <div>
-          <Button variant="primary" onClick={() => deleteNews(newsId)}>Confirm</Button>
-          <Button variant="primary" onClick={() => setModal(false)}>Cancel</Button>
-        </div>
-      </div>
+          <div>
+            The action can not be undone
+          </div>
+          <div>
+            <Button variant="primary" onClick={() => deleteNews(newsId)}>Confirm</Button>
+            <Button variant="primary" onClick={() => setModal(false)}>Cancel</Button>
+          </div>
+        </Card.Body>
+      </Card>
       )
     setModal(true)
   }

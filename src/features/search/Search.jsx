@@ -1,9 +1,12 @@
 import {FaSearch} from "react-icons/fa"
 
-function SearchComponent({searchString, setSearchString, setFilters}) {
+function SearchComponent({searchString, setSearchParams, setFilters}) {
 
     function handleChange(value) {
-        setSearchString(value)
+        setSearchParams(prev => {
+            prev.set("searchString", value)
+            return prev
+        }, {replace: true})
     }
 
     function submitQuery(event) {

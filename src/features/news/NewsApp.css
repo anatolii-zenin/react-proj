@@ -152,7 +152,7 @@ div.ReactTags__selected a.ReactTags__remove {
     outline: none;
 }
 
-.Add-news, .Login, .Welcome, .Login-button, .Total-news, .Footer-content {
+.Add-news, .Login, .Welcome, .About, .Login-button, .Total-news, .Footer-content {
     margin: 5px;
     display: flex;
     flex-direction: column;

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "./AuthContext"
-import { Button, Card, Container, Form } from "react-bootstrap"
+import { Alert, Button, Card, Container, Form } from "react-bootstrap"
 
 function LoginComponent() {
 
@@ -27,7 +27,7 @@ function LoginComponent() {
 
         console.log(authSuccessful)
         if(authSuccessful) {
-            navigate(`/welcome/${username}`)
+            navigate(`/welcome`)
         }
         else {
             setAuthFailure(true)
@@ -43,7 +43,7 @@ function LoginComponent() {
             <Card>
                 <Card.Body>
                     <h2 className="text-center mb-4">Log in</h2>
-                    {authFailure && <div className="AuthFailedMessage">Authorisation failed</div>}
+                    {authFailure != "" && <Alert variant="danger">Authentication failed</Alert>}
                     <Form onSubmit={handleSubmit}>
                         <Form.Group id="username">
                             <Form.Label>Username</Form.Label>

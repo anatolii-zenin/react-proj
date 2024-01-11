@@ -7,7 +7,6 @@ import LoginComponent from "../authentication/Login"
 import LogoutComponent from "../authentication/Logout"
 import ErrorComponent from "../components/Error"
 import News from "./NewsList"
-import ManageUsersComponent from "../components/ManageUsers"
 import WelcomeComponent from "../../pages/Welcome"
 import SignupComponent from "../authentication/Signup"
 import AboutComponent from "../../pages/About"
@@ -43,12 +42,12 @@ export default function NewsApp() {
                         <HeaderComponent />
                         <Routes>
                             <Route path="/login" element={ <LoginComponent /> } />
-                            <Route path="/welcome/:username" element={ 
+                            <Route path="/welcome" element={ 
                                 <AuthenticatedRoute>
                                     <WelcomeComponent />
                                 </AuthenticatedRoute> } />
                             <Route path="*" element={ <ErrorComponent /> } />
-                            <Route path="/" element={ <News /> } />
+                            <Route path="/news" element={ <News /> } />
                             <Route path="/logout" element={ 
                                 <AuthenticatedRoute>
                                     <LogoutComponent />
@@ -58,10 +57,6 @@ export default function NewsApp() {
                                     <SignupComponent />
                                 </AnonymousRoute> } />
                             <Route path="/about" element={ <AboutComponent /> } />
-                            <Route path="/manage" element={ 
-                                <AuthenticatedRoute> 
-                                    <ManageUsersComponent /> 
-                                </AuthenticatedRoute>} />
                         </Routes>
                         <FooterComponent />
                     </BrowserRouter>

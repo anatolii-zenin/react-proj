@@ -14,16 +14,16 @@ function HeaderComponent() {
                         <a className="navbar-brand ms-2 fs-2 fw-bold text-black" href="https://mjc.school/">MJC School</a>
                         <div className="collapse navbar-collapse">
                             <ul className="navbar-nav">
-                                <li className="nav-item"><Link className="nav-link" to="/">News</Link></li>
-                                <li className="nav-item">
-                                    {isAuthenticated && <Link className="nav-link" to="/manage">Manage Users</Link>}
-                                </li>
+                                <li className="nav-item"><Link className="nav-link" to="/news">News</Link></li>
                                 <li className="nav-item"><Link className="nav-link" to="/about">About</Link></li>
                             </ul>
                         </div>
                             <ul className="navbar-nav">
                                 <li className="nav-item">
                                     {!isAuthenticated && <Link className="nav-link" to="/login">Log in</Link>}
+                                </li>
+                                <li className="nav-item">
+                                    {isAuthenticated && <Link className="nav-link" to="/welcome">Signed in as: {authContext.currentUser}</Link>}
                                 </li>
                                 <li className="nav-item">
                                     {isAuthenticated && <Link className="nav-link" to="/logout" onClick={authContext.logOut}>Log out</Link>}
