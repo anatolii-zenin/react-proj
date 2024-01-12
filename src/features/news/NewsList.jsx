@@ -5,12 +5,10 @@ import PaginationComponent from "../pagination/Pagination"
 import NewsCardComponent from "./NewsCard"
 import AddNews from "./AddNews"
 import SearchComponent from "../search/Search"
-import { useAuth } from "../authentication/AuthContext"
 import { useSearchParams } from "react-router-dom"
 
-function mapAuthorsTagsToNews(news, authors, tags) {
+function mapAuthorsTagsToNews(news, tags) {
     return news.map((item, index) => {
-        item.author = authors[index]?.name
         item.tags = tags[index]
         return item
     })
@@ -27,25 +25,23 @@ function News() {
     console.log(searchParams.get("page"))
     const currPage = searchParams.get("page")
     const newsPerPage = searchParams.get("pageSize")
-    const searchString = searchParams.get("searchString")
+    const sortBy = searchParams.get("sortBy")
+    const order = searchParams.get("order")
+    const searchString = searchParams.get("searchString") ?? ""
 
-    const authContext = useAuth()
-    const isAuthenticated = authContext.isAuthenticated
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true"
 
     const queryClient = useQueryClient()
 
-    const { isLoading, data } = useQuery({
-        queryKey: ['news', {page: currPage, size: newsPerPage, filters: filters}],
-        queryFn: () => retrieveAllNews(currPage ?? 1, newsPerPage ?? 3, filters)
-    })
-
-    const authorQueries = useQueries({
-        queries: (data?.data?.content ?? []).map(item => {
-            return {
-                queryKey: ["authorByNewsId", item.id],
-                queryFn: () => retrieveAuthorByNewsId(item.id)
-            }
-        })
+    const { isLoading, data, isError } = useQuery({
+        queryKey: ['news', {page: currPage, size: newsPerPage, sortBy: sortBy, order: order, filters: filters}],
+        queryFn: () => retrieveAllNews(
+            currPage ?? 1, 
+            newsPerPage ?? 3,
+            sortBy ?? "createDate",
+            order ?? "desc",
+            filters
+            )
     })
 
     const tagQueries = useQueries({
@@ -71,14 +67,17 @@ function News() {
         }
     })
 
-    if(isLoading || tagQueries.isLoading || authorQueries.isLoading) {
+    if(isLoading || tagQueries.isLoading) {
         return <h2>Loading items...</h2>
     }
+    
+    if(isError) {
+        return <h2>Unable to obtain the data</h2>
+    }
 
-    const authors = authorQueries.map(q => q?.data?.data)
     const tags = tagQueries.map(q => q?.data?.data)
     const pageInfo = data.data
-    const news = mapAuthorsTagsToNews(pageInfo.content, authors, tags)
+    const news = mapAuthorsTagsToNews(pageInfo.content, tags)
     console.log(filters)
 
     return (
@@ -94,11 +93,11 @@ function News() {
                 <div className="Total-news">
                     Total news: {isLoading ? "Loading..." : pageInfo.totalElements}
                 </div>
-                {isAuthenticated && 
-                    <div className="Add-news">
-                        <AddNews />
-                    </div>
-                }
+                    {isAuthenticated && 
+                        <div className="Add-news">
+                            <AddNews />
+                        </div>
+                    }
                     <div className="NewsContainer">
                         {
                             news.map(
@@ -107,7 +106,7 @@ function News() {
                                         <NewsCardComponent  
                                             newsId={newsEntry.id}
                                             date={newsEntry.createDate}
-                                            author={newsEntry.author}
+                                            author={newsEntry.authorName}
                                             title={newsEntry.title}
                                             content={newsEntry.content}
                                             tags={newsEntry.tags}
@@ -126,6 +125,7 @@ function News() {
                     setSearchParams={setSearchParams}
                     currSize={pageInfo.size}
                     totalElements={pageInfo.totalElements}
+                    sort={searchParams.get("sortBy")}
                 />
             </div>
         </div>

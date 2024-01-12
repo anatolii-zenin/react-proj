@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import {FaSearch} from "react-icons/fa"
 
 function SearchComponent({searchString, setSearchParams, setFilters}) {
@@ -13,43 +14,14 @@ function SearchComponent({searchString, setSearchParams, setFilters}) {
         if (event.key !== "Enter") {
             return
         }
-        let [content, tags] = parseSearchString(searchString)
-        
-        let filters = []
-        
-        if (content.length > 0) {
-            let contentTitleFilter = {
-                operation: "COMBINE",
-                logicalOperation: "AND",
-                subFilters: [{
-                    column: "content",
-                    value: "%" + content + "%",
-                    operation: "LIKE",
-                    logicalOperation: "OR"
-                },
-                {
-                    column: "title",
-                    value: "%" + content + "%",
-                    operation: "LIKE",
-                    logicalOperation: "OR"
-                }]
-            }
-            filters.push(contentTitleFilter)
-        }     
-        
-
-        for (const tag of tags) {
-            let filter = {
-                column: "name",
-                value: "%" + tag + "%",
-                joinTableName: "tags",
-                operation: "JOIN",
-                logicalOperation: "AND",
-            }
-            filters.push(filter)
-        }
+        let filters = parseFilters(searchString)
         setFilters(filters)
     }
+
+    useEffect(() => {
+        let filters = parseFilters(searchString)
+        setFilters(filters)
+    },[])
 
     return (
         <div className="Input-wrapper">
@@ -101,4 +73,44 @@ function parseTags(str, tagsPos) {
         result.push(str.substring(openingBrace+1, closingBrace))
     }
     return result
+}
+
+function parseFilters(searchString) {
+    let [content, tags] = parseSearchString(searchString)
+        
+    let filters = []
+    
+    if (content.length > 0) {
+        let contentTitleFilter = {
+            operation: "COMBINE",
+            logicalOperation: "AND",
+            subFilters: [{
+                column: "content",
+                value: "%" + content + "%",
+                operation: "LIKE",
+                logicalOperation: "OR"
+            },
+            {
+                column: "title",
+                value: "%" + content + "%",
+                operation: "LIKE",
+                logicalOperation: "OR"
+            }]
+        }
+        filters.push(contentTitleFilter)
+    }     
+    
+
+    for (const tag of tags) {
+        let filter = {
+            column: "name",
+            value: "%" + tag + "%",
+            joinTableName: "tags",
+            operation: "JOIN",
+            logicalOperation: "AND",
+        }
+        filters.push(filter)
+    }
+    
+    return filters
 }

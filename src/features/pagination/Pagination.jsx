@@ -1,11 +1,10 @@
 import ReactPaginate from "react-paginate"
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
-import { useEffect } from "react";
 
 function PaginationComponent({
         currPage, totalPages, totalElements, 
-        currSize, setSearchParams
+        currSize, sort, setSearchParams
     }) {
 
     const handlePageClick = (event) => {
@@ -16,7 +15,7 @@ function PaginationComponent({
         
     };
 
-    const handleeSizeChange = (event) => {
+    const handleSizeChange = (event) => {
         let size = event.value
         setSearchParams(prev => {
             prev.set("pageSize", size)
@@ -32,18 +31,39 @@ function PaginationComponent({
         }, {replace: true})
     }
 
-    console.log(currSize)
+    const handleSortChange = (event) => {
+        let sorting = event.value
+        switch (sorting) {
+            case "Date Created":
+                setSearchParams(prev => {
+                    prev.set("sortBy", "createDate")
+                    prev.set("order", "desc")
+                    return prev
+                }, {replace: true})
+                break
+            case "Author Name":
+                setSearchParams(prev => {
+                    prev.set("sortBy", "authorName")
+                    prev.set("order", "asc")
+                    return prev
+                }, {replace: true})
+                break;
+            default:
+                throw new Error("No such sorting option: " + sorting)
+        }
+    }
 
-    const options = [
+    const sizeOptions = [
         3, 9, 12
     ];
 
-    useEffect(
-        () => {
+    const sortOptions = [
+        "Date Created",
+        "Author Name"
+    ]
 
-        }, 
-    )
-    
+    const currSort = sort == "createDate" ? sortOptions[0] : sortOptions[1]
+
     return (
         <div className="Pagination">
             <ReactPaginate
@@ -67,7 +87,8 @@ function PaginationComponent({
                 renderOnZeroPageCount={null}
                 forcePage={totalPages > 0? currPage-1 : -1}
             />
-            <Dropdown options={options} onChange={handleeSizeChange} placeholder={currSize}/>            
+            <Dropdown options={sizeOptions} onChange={handleSizeChange} placeholder={currSize}/>
+            <Dropdown options={sortOptions} onChange={handleSortChange} placeholder={currSort}/>           
         </div>
     );
 }

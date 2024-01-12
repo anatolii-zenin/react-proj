@@ -11,10 +11,8 @@ function NewsCardComponent({title, date, author, content, newsId, tags, deleteMe
   const [modal, setModal] = useState(false)
   const [modalContent, setModalContent] = useState("")
 
-  const authContext = useAuth()
-  const isAuthenticated = authContext.isAuthenticated
-  const isAdmin = authContext.isAdmin
-
+  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true"
+  const isAdmin = localStorage.getItem("isAdmin") === "true"
   function editNews(news) {
     editMethod(news)
     setModal(false)
@@ -50,8 +48,6 @@ function NewsCardComponent({title, date, author, content, newsId, tags, deleteMe
           currentTags={tags} 
           setModal={setModal}
           mainMethod={editNews}
-          jwt={authContext.jwt}
-          authorId={authContext.authorId}
         />
       </div>
       )

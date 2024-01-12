@@ -4,7 +4,6 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import AuthProvider, { useAuth } from "../authentication/AuthContext"
 import HeaderComponent from "../../pages/Header"
 import LoginComponent from "../authentication/Login"
-import LogoutComponent from "../authentication/Logout"
 import ErrorComponent from "../components/Error"
 import News from "./NewsList"
 import WelcomeComponent from "../../pages/Welcome"
@@ -14,8 +13,8 @@ import FooterComponent from "../../pages/Footer"
 
 
 function AuthenticatedRoute({children}) {
-    const authContext = useAuth()
-    if(authContext.isAuthenticated) {
+
+    if(localStorage.getItem("isAuthenticated") === "true") {
         return children
     }
     
@@ -23,8 +22,7 @@ function AuthenticatedRoute({children}) {
 }
 
 function AnonymousRoute({children}) {
-    const authContext = useAuth()
-    if(!authContext.isAuthenticated) {
+    if(localStorage.getItem("isAuthenticated") !== "true") {
         return children
     }
     
@@ -48,10 +46,6 @@ export default function NewsApp() {
                                 </AuthenticatedRoute> } />
                             <Route path="*" element={ <ErrorComponent /> } />
                             <Route path="/news" element={ <News /> } />
-                            <Route path="/logout" element={ 
-                                <AuthenticatedRoute>
-                                    <LogoutComponent />
-                                </AuthenticatedRoute> } />
                             <Route path="/signup" element={ 
                                 <AnonymousRoute>
                                     <SignupComponent />

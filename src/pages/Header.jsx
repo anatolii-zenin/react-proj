@@ -4,7 +4,7 @@ import { useAuth } from "../features/authentication/AuthContext"
 function HeaderComponent() {
 
     const authContext = useAuth()
-    const isAuthenticated = authContext.isAuthenticated
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true"
 
     return (
         <header className="border-bottom border-light border-5 mb-5 p-2">
@@ -23,10 +23,10 @@ function HeaderComponent() {
                                     {!isAuthenticated && <Link className="nav-link" to="/login">Log in</Link>}
                                 </li>
                                 <li className="nav-item">
-                                    {isAuthenticated && <Link className="nav-link" to="/welcome">Signed in as: {authContext.currentUser}</Link>}
+                                    {isAuthenticated && <Link className="nav-link" to="/welcome">Signed in as: {localStorage.getItem("currentUser") ?? []}</Link>}
                                 </li>
                                 <li className="nav-item">
-                                    {isAuthenticated && <Link className="nav-link" to="/logout" onClick={authContext.logOut}>Log out</Link>}
+                                    {isAuthenticated && <Link className="nav-link" to="/login" onClick={authContext.logOut}>Log out</Link>}
                                 </li>
                                 <li className="nav-item">
                                     {!isAuthenticated && <Link className="nav-link" to="/signup">Sign up</Link>}

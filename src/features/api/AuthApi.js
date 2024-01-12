@@ -11,11 +11,10 @@ export async function signUp(username, password) {
 }
 
 export async function getJWT(username, password) {
-    return apiClient.post("/authenticate", {},
-    {
-        auth : {
+    return apiClient.post("/authenticate", 
+        {
             username: username,
             password: password
         }
-    })
+    )
 }

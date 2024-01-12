@@ -8,25 +8,21 @@ export const AuthContext = createContext()
 export const useAuth = () => useContext(AuthContext)
 
 function AuthProvider({children}) {
-    const [isAuthenticated, setAuthenticated] = useState()
-    const [isAdmin, setAdmin] = useState(false)
-    const [currentUser, setCurrentUser] = useState()
-    const [userRoles, setUserRoles] = useState()
-    const [authorId, setAuthorId] = useState()
-    const [jwt, setJwt] = useState()
+    const [isAuthenticated, setAuthenticated] = useState(localStorage.getItem("isAuthenticated") === "true")
 
     async function logIn(username, password) {
         let jwt_local
         try {
             jwt_local = await getJWT(username, password)
             const decoded = jwtDecode(jwt_local?.data.token)
-            setCurrentUser(decoded.sub)
-            setUserRoles(decoded.roles)
-            setAuthenticated(true)
-            setJwt(jwt_local?.data.token)
+            localStorage.setItem("currentUser", decoded.sub)
+            localStorage.setItem("userRoles", decoded.roles)
+            localStorage.setItem("isAuthenticated", true)
+            localStorage.setItem("jwt", jwt_local?.data.token)
             if (decoded.roles.find(x => x === "ROLE_ADMIN") === "ROLE_ADMIN")
-                setAdmin(true)
-            setAuthorId(await getAuthorId(decoded.sub))
+                localStorage.setItem("isAdmin", true)
+            localStorage.setItem("authorId", await getAuthorId(decoded.sub))
+            setAuthenticated(true)
         }
         catch (err) {
             console.error(err)
@@ -36,22 +32,19 @@ function AuthProvider({children}) {
     }
 
     function logOut() {
+        localStorage.removeItem("isAuthenticated")
+        localStorage.removeItem("jwt")
+        localStorage.removeItem("currentUser")
+        localStorage.removeItem("userRoles")
+        localStorage.removeItem("authorId")
+        localStorage.removeItem("isAdmin")
         setAuthenticated(false)
-        setJwt(null)
-        setCurrentUser(null)
-        setUserRoles(null)
-        setAuthorId(null)
-        setAdmin(false)
     }
-
-    useEffect(() => {
-
-    }, [])
-
+    
     return (
         <AuthContext.Provider value={ 
             {
-                isAuthenticated, jwt, userRoles, currentUser, authorId, isAdmin, logIn, logOut
+                logIn, logOut
             } 
         }>
             {children}
