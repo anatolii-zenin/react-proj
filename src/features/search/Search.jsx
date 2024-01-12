@@ -42,11 +42,9 @@ export default SearchComponent
 
 function parseSearchString(searchStr) {
     let tagsPos = findTags(searchStr)
-    console.log(tagsPos)
     let content = tagsPos.length > 0 ? searchStr.substring(0, tagsPos[0]) : searchStr
     content = content.trim()
     let tags = parseTags(searchStr, tagsPos)
-    console.log(tags)
     return [content, tags]
 }
 

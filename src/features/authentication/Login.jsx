@@ -25,7 +25,6 @@ function LoginComponent() {
 
         let authSuccessful = await authContext.logIn(username, password)
 
-        console.log(authSuccessful)
         if(authSuccessful) {
             navigate(`/welcome`)
         }
@@ -43,7 +42,7 @@ function LoginComponent() {
             <Card>
                 <Card.Body>
                     <h2 className="text-center mb-4">Log in</h2>
-                    {authFailure != "" && <Alert variant="danger">Authentication failed</Alert>}
+                    {authFailure === true && <Alert variant="danger">Authentication failed</Alert>}
                     <Form onSubmit={handleSubmit}>
                         <Form.Group id="username">
                             <Form.Label>Username</Form.Label>

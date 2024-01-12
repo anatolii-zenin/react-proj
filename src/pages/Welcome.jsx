@@ -5,7 +5,6 @@ function WelcomeComponent() {
 
     const authContext = useAuth()
 
-    console.log(authContext)
     return (
         <div className="Welcome">
             <h1>Welcome {localStorage.getItem("currentUser")}</h1>

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { deleteNewsById, editNewsEntry, retrieveAllNews, retrieveAuthorByNewsId, retrieveTagsByNewsId } from "../api/NewsApi"
+import { deleteNewsById, editNewsEntry, retrieveAllNews, retrieveTagsByNewsId } from "../api/NewsApi"
 import { useQuery, useQueries, useMutation, useQueryClient } from "@tanstack/react-query"
 import PaginationComponent from "../pagination/Pagination"
 import NewsCardComponent from "./NewsCard"
@@ -22,11 +22,10 @@ function News() {
             pageSize: "3"
         }
     )
-    console.log(searchParams.get("page"))
-    const currPage = searchParams.get("page")
-    const newsPerPage = searchParams.get("pageSize")
-    const sortBy = searchParams.get("sortBy")
-    const order = searchParams.get("order")
+    const currPage = searchParams.get("page") ?? 1
+    const newsPerPage = searchParams.get("pageSize") ?? 3
+    const sortBy = searchParams.get("sortBy") ?? "createDate"
+    const order = searchParams.get("order") ?? "desc"
     const searchString = searchParams.get("searchString") ?? ""
 
     const isAuthenticated = localStorage.getItem("isAuthenticated") === "true"
@@ -36,10 +35,10 @@ function News() {
     const { isLoading, data, isError } = useQuery({
         queryKey: ['news', {page: currPage, size: newsPerPage, sortBy: sortBy, order: order, filters: filters}],
         queryFn: () => retrieveAllNews(
-            currPage ?? 1, 
-            newsPerPage ?? 3,
-            sortBy ?? "createDate",
-            order ?? "desc",
+            currPage, 
+            newsPerPage,
+            sortBy,
+            order,
             filters
             )
     })
@@ -78,7 +77,6 @@ function News() {
     const tags = tagQueries.map(q => q?.data?.data)
     const pageInfo = data.data
     const news = mapAuthorsTagsToNews(pageInfo.content, tags)
-    console.log(filters)
 
     return (
         <div>
@@ -125,7 +123,7 @@ function News() {
                     setSearchParams={setSearchParams}
                     currSize={pageInfo.size}
                     totalElements={pageInfo.totalElements}
-                    sort={searchParams.get("sortBy")}
+                    sort={sortBy}
                 />
             </div>
         </div>

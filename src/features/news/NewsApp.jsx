@@ -1,7 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Navigate, HashRouter } from "react-router-dom"
 import "./NewsApp.css"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
-import AuthProvider, { useAuth } from "../authentication/AuthContext"
+import AuthProvider from "../authentication/AuthContext"
 import HeaderComponent from "../../pages/Header"
 import LoginComponent from "../authentication/Login"
 import ErrorComponent from "../components/Error"
@@ -26,7 +26,7 @@ function AnonymousRoute({children}) {
         return children
     }
     
-    return <Navigate to="/" />
+    return <Navigate to="/news" />
 }
 
 const queryClient = new QueryClient()
@@ -36,9 +36,10 @@ export default function NewsApp() {
         <div className="NewsApp">
             <QueryClientProvider client={queryClient}>
                 <AuthProvider>
-                    <BrowserRouter>
+                    <HashRouter>
                         <HeaderComponent />
                         <Routes>
+                            <Route path="/" element={ <Navigate to="/news" /> } />
                             <Route path="/login" element={ <LoginComponent /> } />
                             <Route path="/welcome" element={ 
                                 <AuthenticatedRoute>
@@ -53,7 +54,7 @@ export default function NewsApp() {
                             <Route path="/about" element={ <AboutComponent /> } />
                         </Routes>
                         <FooterComponent />
-                    </BrowserRouter>
+                    </HashRouter>
                 </AuthProvider>
             </QueryClientProvider>
         </div>

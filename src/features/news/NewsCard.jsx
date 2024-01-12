@@ -1,6 +1,5 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import AuthProvider, { useAuth } from "../authentication/AuthContext"
 import { useState } from 'react';
 import Modal from "../components/Modal"
 import NewsForm from '../../forms/NewsForm'

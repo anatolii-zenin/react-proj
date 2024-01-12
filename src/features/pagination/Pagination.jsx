@@ -23,7 +23,6 @@ function PaginationComponent({
         }, {replace: true})
 
         let lastPage = Math.ceil(totalElements/size)
-        console.log("last page: " + lastPage)
         if (currPage > lastPage)
         setSearchParams(prev => {
             prev.set("page", lastPage)
@@ -62,7 +61,7 @@ function PaginationComponent({
         "Author Name"
     ]
 
-    const currSort = sort == "createDate" ? sortOptions[0] : sortOptions[1]
+    const currSort = sort === "createDate" ? sortOptions[0] : sortOptions[1]
 
     return (
         <div className="Pagination">

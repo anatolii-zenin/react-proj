@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useState } from "react"
 import { getJWT } from "../api/AuthApi"
 import { jwtDecode } from "jwt-decode"
 import { filterAuthors } from "../api/NewsApi"
@@ -27,7 +27,7 @@ function AuthProvider({children}) {
         catch (err) {
             console.error(err)
         }
-        if (jwt_local != null && jwt_local != undefined)
+        if (jwt_local !== null && jwt_local !== undefined)
             return true
     }
 
