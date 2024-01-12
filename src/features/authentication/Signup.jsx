@@ -19,8 +19,9 @@ function SignupComponent() {
             await signUp(usernameRef.current.value, passwordRef.current.value)
             setSuccess(true)
         } catch (err) {
-            setError(err.message)
-            console.error(err)
+            setError(err.response.data.message)
+            console.error(err.response)
+            setLoading(false)
             return false
         }
         setLoading(false)
